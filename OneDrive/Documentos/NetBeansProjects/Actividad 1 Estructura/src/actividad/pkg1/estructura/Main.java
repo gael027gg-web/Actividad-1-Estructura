@@ -1,5 +1,7 @@
 package actividad.pkg1.estructura;
 
+import java.util.Scanner;
+
 public class Main {
 
     // ============================
@@ -16,7 +18,6 @@ public class Main {
 
         public T getData() { return data; }
         public void setData(T data) { this.data = data; }
-
         public Node<T> getNext() { return next; }
         public void setNext(Node<T> next) { this.next = next; }
     }
@@ -36,7 +37,6 @@ public class Main {
         public T getData() { return data; }
         public NodeD<T> getNext() { return next; }
         public NodeD<T> getPrev() { return prev; }
-
         public void setNext(NodeD<T> next) { this.next = next; }
         public void setPrev(NodeD<T> prev) { this.prev = prev; }
     }
@@ -127,7 +127,7 @@ public class Main {
             System.out.println("NULL");
         }
     }
-
+ 
     // ============================
     // Clase Contacto (dato complejo)
     // ============================
@@ -142,10 +142,6 @@ public class Main {
             this.telefono = telefono;
         }
 
-        public String getNombre() { return nombre; }
-        public String getDireccion() { return direccion; }
-        public String getTelefono() { return telefono; }
-
         @Override
         public String toString() {
             return "[" + nombre + ", " + direccion + ", " + telefono + "]";
@@ -153,63 +149,211 @@ public class Main {
     }
 
     // ============================
-    // Clase DataTypeExamples
+    // Clase Pila (Stack)
     // ============================
-    static class DataTypeExamples {
-        public static void ejemploPrimitivos() {
-            LinkedList<Integer> listaInt = new LinkedList<>();
-            listaInt.insertar(10);
-            listaInt.insertar(20);
-            listaInt.insertar(30);
-            System.out.println("\nEjemplo de lista con enteros:");
-            listaInt.mostrar();
+    static class Pila<T> {
+        private Node<T> tope;
+
+        public boolean isEmpty() {
+            return tope == null;
         }
 
-        public static void ejemploContactos() {
-            LinkedList<Contacto> listaC = new LinkedList<>();
-            listaC.insertar(new Contacto("Ana", "Monterrey", "8123456789"));
-            listaC.insertar(new Contacto("Luis", "Guadalupe", "8112345678"));
-            listaC.insertar(new Contacto("Karla", "Apodaca", "8187654321"));
-            System.out.println("\nEjemplo de lista con contactos:");
-            listaC.mostrar();
+        public void push(T data) {
+            Node<T> nuevo = new Node<>(data);
+            nuevo.setNext(tope);
+            tope = nuevo;
+            System.out.println("Elemento agregado a la pila.");
+        }
+
+        public T pop() {
+            if (isEmpty()) {
+                System.out.println("La pila está vacía.");
+                return null;
+            }
+            T dato = tope.getData();
+            tope = tope.getNext();
+            System.out.println("Elemento eliminado de la pila: " + dato);
+            return dato;
+        }
+
+        public T peek() {
+            if (isEmpty()) {
+                System.out.println("La pila está vacía.");
+                return null;
+            }
+            System.out.println("Cima de la pila: " + tope.getData());
+            return tope.getData();
+        }
+
+        public void mostrar() {
+            if (isEmpty()) {
+                System.out.println("Pila vacía.");
+                return;
+            }
+            System.out.println("\n--- Pila ---");
+            Node<T> temp = tope;
+            while (temp != null) {
+                System.out.print(temp.getData() + " -> ");
+                temp = temp.getNext();
+            }
+            System.out.println("NULL");
         }
     }
 
     // ============================
-    // Main con menú interactivo
+    // Clase Cola (Queue)
+    // ============================
+    static class Cola<T> {
+        private Node<T> frente;
+        private Node<T> fin;
+
+        public boolean isEmpty() {
+            return frente == null;
+        }
+
+        public void enqueue(T data) {
+            Node<T> nuevo = new Node<>(data);
+            if (fin == null) {
+                frente = fin = nuevo;
+            } else {
+                fin.setNext(nuevo);
+                fin = nuevo;
+            }
+            System.out.println("Elemento agregado a la cola.");
+        }
+
+        public T dequeue() {
+            if (isEmpty()) {
+                System.out.println("La cola está vacía.");
+                return null;
+            }
+            T dato = frente.getData();
+            frente = frente.getNext();
+            if (frente == null) fin = null;
+            System.out.println("Elemento eliminado de la cola: " + dato);
+            return dato;
+        }
+
+        public T peek() {
+            if (isEmpty()) {
+                System.out.println("La cola está vacía.");
+                return null;
+            }
+            System.out.println("Frente de la cola: " + frente.getData());
+            return frente.getData();
+        }
+
+        public void mostrar() {
+            if (isEmpty()) {
+                System.out.println("Cola vacía.");
+                return;
+            }
+            System.out.println("\n--- Cola ---");
+            Node<T> temp = frente;
+            while (temp != null) {
+                System.out.print(temp.getData() + " -> ");
+                temp = temp.getNext();
+            }
+            System.out.println("NULL");
+        }
+    }
+
+    // ============================
+    // Módulo de pruebas del sistema
+    // ============================
+    public static void pruebasSistema() {
+        Scanner sc = new Scanner(System.in);
+        int opcion;
+
+        Pila<Object> pila = new Pila<>();
+        Cola<Object> cola = new Cola<>();
+
+        do {
+            System.out.println("\n===== Gestión del Sistema (Simulado) =====");
+            System.out.println("1. Usar Pila");
+            System.out.println("2. Usar Cola");
+            System.out.println("3. Regresar");
+            System.out.print("Seleccione: ");
+            opcion = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    pila.push("Proceso A");
+                    pila.push("Proceso B");
+                    pila.mostrar();
+                    pila.pop();
+                    pila.peek();
+                    pila.mostrar();
+                    break;
+
+                case 2:
+                    cola.enqueue("Proceso 1");
+                    cola.enqueue("Proceso 2");
+                    cola.mostrar();
+                    cola.dequeue();
+                    cola.peek();
+                    cola.mostrar();
+                    break;
+
+                case 3:
+                    System.out.println("Regresando...");
+                    break;
+
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        } while (opcion != 3);
+    }
+
+    // ============================
+    // Main y Menú Principal
     // ============================
     public static void main(String[] args) {
-        java.util.Scanner sc = new java.util.Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        int opcion;
 
         System.out.println("======================================");
         System.out.println(" Screenshot del alumno");
         System.out.println(" Nombre: Gael Giovanni Gaytán García");
         System.out.println(" Matrícula: 07099843");
         System.out.println("======================================");
-        System.out.println("=== Sistema de Listas Enlazadas Genéricas ===");
 
-        int tipoLista;
-        System.out.println("\nSeleccione el tipo de lista a usar:");
-        System.out.println("1. Lista Simple");
-        System.out.println("2. Lista Doble");
-        System.out.print("Opción: ");
-        tipoLista = sc.nextInt();
-        sc.nextLine();
+        do {
+            System.out.println("\n=== Sistema de Estructuras ===");
+            System.out.println("1. Lista Simple");
+            System.out.println("2. Lista Doble");
+            System.out.println("3. Probar Pila y Cola");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
+            opcion = sc.nextInt();
+            sc.nextLine();
 
-        if (tipoLista == 1) {
-            LinkedList<Object> lista = new LinkedList<>();
-            menuListaSimple(lista, sc);
-        } else if (tipoLista == 2) {
-            DoublyLinkedList<Object> listaD = new DoublyLinkedList<>();
-            menuListaDoble(listaD, sc);
-        } else {
-            System.out.println("Opción inválida. Fin del programa.");
-        }
+            switch(opcion){
+                case 1:
+                    LinkedList<Object> listaS = new LinkedList<>();
+                    menuListaSimple(listaS, sc);
+                    break;
+                case 2:
+                    DoublyLinkedList<Object> listaD = new DoublyLinkedList<>();
+                    menuListaDoble(listaD, sc);
+                    break;
+                case 3:
+                    pruebasSistema();
+                    break;
+                case 4:
+                    System.out.println("Gracias por usar el sistema.");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+
+        } while(opcion != 4);
         sc.close();
     }
 
     // Menú lista simple
-    public static void menuListaSimple(LinkedList<Object> lista, java.util.Scanner sc) {
+    public static void menuListaSimple(LinkedList<Object> lista, Scanner sc) {
         int opcion;
         do {
             System.out.println("\n--- Menú Lista Simple ---");
@@ -217,9 +361,8 @@ public class Main {
             System.out.println("2. Eliminar elemento");
             System.out.println("3. Buscar elemento");
             System.out.println("4. Mostrar lista");
-            System.out.println("5. Ejemplos de tipos de datos");
-            System.out.println("6. Agregar contacto");
-            System.out.println("7. Salir");
+            System.out.println("5. Agregar contacto");
+            System.out.println("6. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = sc.nextInt();
             sc.nextLine();
@@ -250,10 +393,6 @@ public class Main {
                     lista.mostrar();
                     break;
                 case 5:
-                    DataTypeExamples.ejemploPrimitivos();
-                    DataTypeExamples.ejemploContactos();
-                    break;
-                case 6:
                     System.out.print("Nombre: ");
                     String n = sc.nextLine();
                     System.out.print("Dirección: ");
@@ -264,17 +403,17 @@ public class Main {
                     lista.insertar(c);
                     System.out.println("Contacto agregado.");
                     break;
-                case 7:
+                case 6:
                     System.out.println("Saliendo...");
                     break;
                 default:
                     System.out.println("Opción inválida.");
             }
-        } while (opcion != 7);
+        } while (opcion != 6);
     }
 
     // Menú lista doble
-    public static void menuListaDoble(DoublyLinkedList<Object> lista, java.util.Scanner sc) {
+    public static void menuListaDoble(DoublyLinkedList<Object> lista, Scanner sc) {
         int opcion;
         do {
             System.out.println("\n--- Menú Lista Doble ---");
